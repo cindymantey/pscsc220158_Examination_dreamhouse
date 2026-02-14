@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>A-Frame Scene</title>
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aframe-text-geometry-component@1.1.0/dist/aframe-text-geometry-component.min.js"></script>
+    <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
 </head>
 <body>
     <a-scene>
@@ -25,9 +27,9 @@
         </a-plane>      
         <!-- Sky -->
         <a-assets>
-            <img id="skyTexture" src="textures/sky.jpg">
+            <a-entity environment="preset: default; skyType: atmosphere; skyColor: #88c2f7"></a-entity>
           </a-assets>
-          <a-sky src="#skyTexture"></a-sky>
+        
     </a-scene>
 </body>
 </html>
