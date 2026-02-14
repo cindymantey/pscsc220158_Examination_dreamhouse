@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A-Frame Scene</title>
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+</head>
+<body>
+    <a-scene>
+        <!-- Camera -->
+        <a-camera position="0 1.6 0" look-controls="enabled: true"></a-camera>
+
+        <!-- Lighting -->
+        <a-light type="ambient" color="#404040"></a-light>
+        <a-light type="directional" position="0 1 1" intensity="0.5"></a-light>
+
+        <!-- Ground -->
+        <a-plane 
+            rotation="-90 0 0" 
+            width="10" 
+            height="10" 
+            color="#7BC8A4"
+            position="0 0 0">
+        </a-plane>      
+        <!-- Sky -->
+        <a-assets>
+            <img id="skyTexture" src="texture/sky.jpg">
+          </a-assets>
+          <a-sky src="#skyTexture"></a-sky>
+    </a-scene>
+</body>
+</html>
+
