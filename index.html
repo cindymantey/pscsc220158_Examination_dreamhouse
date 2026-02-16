@@ -1,36 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A-Frame Scene</title>
-    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/aframe-text-geometry-component@1.1.0/dist/aframe-text-geometry-component.min.js"></script>
-    <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
 </head>
 <body>
-    <a-scene>
-        <!-- Camera -->
-        <a-camera position="0 1.6 0" look-controls="enabled: true"></a-camera>
+  <a-scene>
+    <a-assets>
+      <!-- Dream House Model with Sky -->
+      <a-asset-item id="DreamHouseModel" src="3d models/DreamHouse.glb"></a-asset-item>
+    </a-assets>
 
-        <!-- Lighting -->
-        <a-light type="ambient" color="#404040"></a-light>
-        <a-light type="directional" position="0 1 1" intensity="0.5"></a-light>
-
-        <!-- Ground -->
-        <a-plane 
-            rotation="-90 0 0" 
-            width="10" 
-            height="10" 
-            color="#7BC8A4"
-            position="0 0 0">
-        </a-plane>      
-        <!-- Sky -->
-        <a-assets>
-            <a-entity environment="preset: default; skyType: atmosphere; skyColor: #88c2f7"></a-entity>
-          </a-assets>
-        
-    </a-scene>
+    <a-entity gltf-model="#DreamHouseModel" position="0 0 0"></a-entity>
+    
+    <!-- Camera with movement controls -->
+    <a-entity 
+      camera 
+      look-controls 
+      wasd-controls 
+      position="0 1.6 5">
+    </a-entity>
+    
+    <!-- lights -->
+    <a-light type="ambient" intensity="0.5"></a-light>
+    <a-light type="directional" position="5 10 5" intensity="0.8"></a-light>
+  </a-scene>
 </body>
 </html>
-
