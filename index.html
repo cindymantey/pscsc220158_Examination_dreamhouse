@@ -57,7 +57,7 @@
 
     <!-- Ground -->
     <a-plane
-      src="#groundTexture"
+      id="ground"
       rotation="-90 0 0"
       width="200"
       height="200"
@@ -115,20 +115,30 @@
       setTimeout(() => {
         document.getElementById('ui').classList.remove('visible');
       }, 5000);
-    });
 
-    const scene = document.querySelector('a-scene');
+      const groundImg = document.getElementById('groundTexture');
+      const groundPlane = document.getElementById('ground');
 
-    scene.addEventListener('enter-vr', function() {
-      const renderer = scene.renderer;
-      if (renderer) {
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      function applyGroundTextureIfReady() {
+        if (!groundImg || !groundPlane) return;
+
+        const width = groundImg.naturalWidth;
+        const height = groundImg.naturalHeight;
+
+        if (width > 0 && height > 0) {
+          // Only now attach the texture so WebGL mipmaps run on a valid image.
+          groundPlane.setAttribute('material', `src: #groundTexture; shader: standard; roughness: 0.8; metalness: 0.1`);
+          console.log('Ground texture applied with size', width, 'x', height);
+        } else {
+          console.error('Ground texture has zero size. Check that textures/ground.jpg exists and loads correctly.');
+        }
       }
-    });
 
-    // Adjust villa position after model loads if needed
-    scene.addEventListener('loaded', function() {
-      console.log('Scene loaded successfully');
+      if (groundImg && groundImg.complete) {
+        applyGroundTextureIfReady();
+      } else if (groundImg) {
+        groundImg.addEventListener('load', applyGroundTextureIfReady, { once: true });
+      }
     });
   </script>
 </body>
