@@ -4,9 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VR Villa Experience</title>
+  <!-- Core A-Frame library -->
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <!-- Hand tracking and interactions -->
-  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -51,13 +50,8 @@
   
   <a-scene 
     vr-mode-ui="enabled: true"
-    renderer="antialias: true; colorManagement: true; sortObjects: true; 
-              shadowMap.enabled: true; shadowMap.type: PCFSoft;
-              physicallyCorrectLights: true; toneMapping: ACESFilmic;
-              toneMappingExposure: 1.0"
     background="color: #87CEEB"
-    stats
-    embedded>
+    stats>
     <a-assets>
       <!-- Dream House Model -->
       <a-asset-item id="villaModel" src="3d models/villa.glb" preload="true"></a-asset-item>
@@ -171,17 +165,17 @@
       init: function () {
         this.rig = document.querySelector('#rig');
         this.camera = document.querySelector('#camera');
-        this.raycaster = this.el.components.raycaster;
 
         this.el.addEventListener('triggerdown', () => {
-          if (!this.raycaster || !this.raycaster.intersections || !this.raycaster.intersections.length) {
+          const raycaster = this.el.components.raycaster;
+          if (!raycaster || !raycaster.intersections || !raycaster.intersections.length) {
             return;
           }
 
-          const intersection = this.raycaster.intersections[0];
+          const intersection = raycaster.intersections[0];
           if (intersection && intersection.object && intersection.object.el && intersection.object.el.tagName === 'A-PLANE') {
-            const newPosition = intersection.point.clone ? intersection.point.clone() : intersection.point;
-            newPosition.y = this.camera.getAttribute('position').y;
+            const point = intersection.point;
+            const newPosition = { x: point.x, y: this.camera.getAttribute('position').y, z: point.z };
             this.rig.setAttribute('position', newPosition);
           }
         });
@@ -201,59 +195,6 @@
         document.getElementById('ui').classList.remove('visible');
       }, 5000);
     });
-    
-    // VR mode detection and optimization
-    const scene = document.querySelector('a-scene');
-    
-    scene.addEventListener('enter-vr', function() {
-      console.log('Entered VR mode - Performance optimizations active');
-      // Optimize for VR performance
-      const renderer = scene.renderer;
-      if (renderer) {
-        // Limit pixel ratio for better performance
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
-        // Enable foveated rendering if available
-        if (renderer.xr && renderer.xr.enabled) {
-          console.log('VR rendering optimized');
-        }
-      }
-    });
-    
-    scene.addEventListener('exit-vr', function() {
-      console.log('Exited VR mode');
-    });
-    
-    // Preload optimization and texture quality
-    scene.addEventListener('loaded', function() {
-      console.log('Scene loaded and optimized for VR');
-      
-      // Ensure textures are properly loaded
-      const groundTexture = document.querySelector('#groundTexture');
-      if (groundTexture) {
-        groundTexture.addEventListener('loaded', function() {
-          console.log('Ground texture loaded with high quality');
-        });
-      }
-    });
-    
-    // Performance monitoring
-    let frameCount = 0;
-    let lastTime = performance.now();
-    
-    function checkPerformance() {
-      frameCount++;
-      const currentTime = performance.now();
-      if (currentTime >= lastTime + 1000) {
-        const fps = Math.round((frameCount * 1000) / (currentTime - lastTime));
-        if (fps < 60 && scene.is('vr-mode')) {
-          console.warn('Performance warning: FPS dropped to', fps);
-        }
-        frameCount = 0;
-        lastTime = currentTime;
-      }
-      requestAnimationFrame(checkPerformance);
-    }
-    checkPerformance();
   </script>
 </body>
 </html>
