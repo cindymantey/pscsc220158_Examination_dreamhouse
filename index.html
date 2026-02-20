@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>VR Villa Experience</title>
+  <!-- Core A-Frame library (must load before any extras/components) -->
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
   <style>
     body { margin: 0; font-family: Arial, sans-serif; }
     #ui {
@@ -75,7 +75,7 @@
     </a-entity>
 
     <!-- Camera Rig for VR movement -->
-    <a-entity id="rig" position="0 0 0" movement-controls="fly: false">
+    <a-entity id="rig" position="0 0 0">
       <a-entity
         id="camera"
         camera="fov: 80; near: 0.1; far: 1000"
