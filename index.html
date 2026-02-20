@@ -48,9 +48,18 @@
     embedded>
 
     <a-assets timeout="10000">
-      <a-asset-item id="villaModel" src="3d-models/villa.glb"></a-asset-item>
-      <img id="groundTexture" src="textures/ground.jpg" crossorigin="anonymous">
-    </a-assets>
+     <!-- Replace villa model -->
+<a-box position="0 0 -5" color="red" shadow></a-box>
+
+<!-- Replace ground texture with a simple color -->
+<a-plane
+  id="ground"
+  rotation="-90 0 0"
+  width="200"
+  height="200"
+  position="0 0 0"
+  material="color: green; repeat: 10 10">
+</a-plane>
 
     <!-- Sky -->
     <a-sky color="#87CEEB"></a-sky>
