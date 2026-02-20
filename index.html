@@ -55,9 +55,10 @@
     <!-- Sky -->
     <a-sky color="#87CEEB"></a-sky>
 
-    <!-- Ground -->
+    <!-- Ground (raycastable for interactions/teleport) -->
     <a-plane
       id="ground"
+      class="raycastable"
       rotation="-90 0 0"
       width="200"
       height="200"
@@ -87,14 +88,14 @@
       <a-entity
         hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"
         laser-controls="hand: right"
-        raycaster="far: 100; lineColor: #118A7E; lineOpacity: 0.8; showLine: true">
+        raycaster="objects: .raycastable; far: 100; lineColor: #118A7E; lineOpacity: 0.8; showLine: true">
       </a-entity>
 
       <!-- Left hand controller -->
       <a-entity
         hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"
         laser-controls="hand: left"
-        raycaster="far: 100; showLine: false">
+        raycaster="objects: .raycastable; far: 100; showLine: false">
       </a-entity>
     </a-entity>
 
@@ -125,19 +126,31 @@
         const width = groundImg.naturalWidth;
         const height = groundImg.naturalHeight;
 
+        // Validate dimensions before A‑Frame / WebGL creates mipmaps.
         if (width > 0 && height > 0) {
-          // Only now attach the texture so WebGL mipmaps run on a valid image.
-          groundPlane.setAttribute('material', `src: #groundTexture; shader: standard; roughness: 0.8; metalness: 0.1`);
+          groundPlane.setAttribute(
+            'material',
+            'src: #groundTexture; shader: standard; roughness: 0.8; metalness: 0.1'
+          );
           console.log('Ground texture applied with size', width, 'x', height);
         } else {
           console.error('Ground texture has zero size. Check that textures/ground.jpg exists and loads correctly.');
         }
       }
 
-      if (groundImg && groundImg.complete) {
-        applyGroundTextureIfReady();
-      } else if (groundImg) {
-        groundImg.addEventListener('load', applyGroundTextureIfReady, { once: true });
+      if (groundImg) {
+        if (groundImg.complete) {
+          // Image already in cache and fully loaded.
+          applyGroundTextureIfReady();
+        } else {
+          // Wait for explicit load or error before using as a texture.
+          groundImg.addEventListener('load', applyGroundTextureIfReady, { once: true });
+          groundImg.addEventListener(
+            'error',
+            () => console.error('Failed to load ground texture from textures/ground.jpg'),
+            { once: true }
+          );
+        }
       }
     });
   </script>
