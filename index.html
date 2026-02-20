@@ -6,10 +6,25 @@
 <body>
   <a-scene>
     <a-assets>
-      <!-- Dream House Model with Sky and Ground -->
+      <!-- Dream House Model -->
       <a-asset-item id="villaModel" src="3d models/villa.glb"></a-asset-item>
+      <!-- Ground Texture -->
+      <img id="groundTexture" src="textures/ground.jpg">
     </a-assets>
 
+    <!-- Sky -->
+    <a-sky color="#87CEEB"></a-sky>
+    
+    <!-- Ground -->
+    <a-plane 
+      src="#groundTexture" 
+      rotation="-90 0 0" 
+      width="100" 
+      height="100" 
+      repeat="10 10"
+      position="0 0 0">
+    </a-plane>
+    
     <a-entity gltf-model="#villaModel" position="0 0 0"></a-entity>
     
     <!-- Camera with movement controls -->
