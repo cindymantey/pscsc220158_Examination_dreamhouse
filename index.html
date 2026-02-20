@@ -8,6 +8,7 @@
     <a-assets>
       <!-- Dream House Model -->
       <a-asset-item id="villaModel" src="3d models/villa.glb"></a-asset-item>
+
       <!-- Ground Texture -->
       <img id="groundTexture" src="textures/ground.jpg">
     </a-assets>
@@ -25,14 +26,14 @@
       position="0 0 0">
     </a-plane>
     
-    <a-entity gltf-model="#villaModel" position="0 0 0"></a-entity>
+    <a-entity gltf-model="#villaModel" position="0 -2 -10"></a-entity>
     
     <!-- Camera with movement controls -->
     <a-entity 
       camera 
       look-controls 
       wasd-controls 
-      position="0 1.6 5">
+      position="0 1.6 15">
     </a-entity>
     
     <!-- lights -->
