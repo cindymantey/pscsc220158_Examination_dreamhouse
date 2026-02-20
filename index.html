@@ -1,195 +1,44 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>VR Villa Experience</title>
-  <!-- Core A-Frame library (must load before any extras/components) -->
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
-  <style>
-    body { margin: 0; font-family: Arial, sans-serif; }
-    #ui {
-      position: fixed;
-      top: 20px;
-      left: 20px;
-      z-index: 1000;
-      background: rgba(0,0,0,0.7);
-      color: white;
-      padding: 15px;
-      border-radius: 8px;
-      font-size: 14px;
-      display: none;
-    }
-    #ui.visible { display: block; }
-    .ui-button {
-      background: #4CAF50;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      margin: 5px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .ui-button:hover { background: #45a049; }
-  </style>
 </head>
 <body>
-  <div id="ui">
-    <h3>VR Controls</h3>
-    <p><strong>Desktop:</strong> Click and drag to look, WASD to move</p>
-    <p><strong>VR:</strong> Use controllers to look around and move</p>
-    <button class="ui-button" onclick="toggleUI()">Hide Instructions</button>
-  </div>
+  <a-scene>
+    <a-assets>
+      <!-- Dream House Model -->
+      <a-asset-item id="villaModel" src="3d models/villa.glb"></a-asset-item>
 
-  <a-scene
-    vr-mode-ui="enabled: true"
-    renderer="antialias: true; colorManagement: true; physicallyCorrectLights: true"
-    background="color: #87CEEB"
-    embedded>
-
-    <a-assets timeout="10000">
-     <!-- Replace villa model -->
-<a-box position="0 0 -5" color="red" shadow></a-box>
-
-<!-- Replace ground texture with a simple color -->
-<a-plane
-  id="ground"
-  rotation="-90 0 0"
-  width="200"
-  height="200"
-  position="0 0 0"
-  material="color: green; repeat: 10 10">
-</a-plane>
+      <!-- Ground Texture -->
+      <img id="groundTexture" src="textures/ground.jpg">
+    </a-assets>
 
     <!-- Sky -->
     <a-sky color="#87CEEB"></a-sky>
-
-    <!-- Ground (raycastable for interactions/teleport) -->
-    <a-plane
-      id="ground"
-      class="raycastable"
-      rotation="-90 0 0"
-      width="200"
-      height="200"
+    
+    <!-- Ground -->
+    <a-plane 
+      src="#groundTexture" 
+      rotation="-90 0 0" 
+      width="100" 
+      height="100" 
       repeat="10 10"
-      position="0 0 0"
-      material="shader: standard; roughness: 0.8; metalness: 0.1">
+      position="0 0 0">
     </a-plane>
-
-    <!-- Villa Model -->
-    <a-entity
-      gltf-model="#villaModel"
-      position="0 0 -10"
-      scale="0.01 0.01 0.01"
-      shadow="cast: true; receive: true">
+    
+    <a-entity gltf-model="#villaModel" position=" -150 -60 -10"></a-entity>
+    
+    <!-- Camera with movement controls -->
+    <a-entity 
+      camera 
+      look-controls 
+      wasd-controls 
+      position="0 1.6 15">
     </a-entity>
-
-    <!-- Camera Rig for VR movement -->
-    <a-entity id="rig" position="0 0 0">
-      <a-entity
-        id="camera"
-        camera="fov: 80; near: 0.1; far: 1000"
-        look-controls="pointerLockEnabled: true; touchEnabled: true"
-        position="0 1.6 15">
-      </a-entity>
-
-      <!-- Right hand controller -->
-      <a-entity
-        hand-controls="hand: right; handModelStyle: lowPoly; color: #ffcccc"
-        laser-controls="hand: right"
-        raycaster="objects: .raycastable; far: 100; lineColor: #118A7E; lineOpacity: 0.8; showLine: true">
-      </a-entity>
-
-      <!-- Left hand controller -->
-      <a-entity
-        hand-controls="hand: left; handModelStyle: lowPoly; color: #ffcccc"
-        laser-controls="hand: left"
-        raycaster="objects: .raycastable; far: 100; showLine: false">
-      </a-entity>
-    </a-entity>
-
-    <!-- Lighting -->
-    <a-light type="ambient" intensity="0.6" color="#FFFFFF"></a-light>
-    <a-light type="directional" position="5 10 5" intensity="0.9" color="#FFFFFF"></a-light>
-    <a-light type="hemisphere" color="#87CEEB" groundColor="#8B7355" intensity="0.4"></a-light>
-
+    
+    <!-- lights -->
+    <a-light type="ambient" intensity="0.5"></a-light>
+    <a-light type="directional" position="5 10 5" intensity="0.8"></a-light>
   </a-scene>
-
-  <script>
-    function toggleUI() {
-      document.getElementById('ui').classList.toggle('visible');
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('ui').classList.add('visible');
-      setTimeout(() => {
-        document.getElementById('ui').classList.remove('visible');
-      }, 5000);
-
-      const groundImg = document.getElementById('groundTexture');
-      const groundPlane = document.getElementById('ground');
-
-      function applyGroundTextureIfReady() {
-        if (!groundImg || !groundPlane) return;
-
-        const width = groundImg.naturalWidth;
-        const height = groundImg.naturalHeight;
-
-        // Validate dimensions before A‑Frame / WebGL creates mipmaps.
-        if (width > 0 && height > 0) {
-          groundPlane.setAttribute(
-            'material',
-            'src: #groundTexture; shader: standard; roughness: 0.8; metalness: 0.1'
-          );
-          console.log('Ground texture applied with size', width, 'x', height);
-        } else {
-          console.error('Ground texture has zero size. Check that textures/ground.jpg exists and loads correctly.');
-        }
-      }
-
-      if (groundImg) {
-        if (groundImg.complete) {
-          // Image already in cache and fully loaded.
-          applyGroundTextureIfReady();
-        } else {
-          // Wait for explicit load or error before using as a texture.
-          groundImg.addEventListener('load', applyGroundTextureIfReady, { once: true });
-          groundImg.addEventListener(
-            'error',
-            () => console.error('Failed to load ground texture from textures/ground.jpg'),
-            { once: true }
-          );
-        }
-      }
-
-      // After the A-Frame scene and renderer are ready, verify framebuffer completeness.
-      const sceneEl = document.querySelector('a-scene');
-      if (sceneEl) {
-        sceneEl.addEventListener('loaded', function () {
-          const renderer = sceneEl.renderer;
-          if (!renderer || !renderer.getContext) {
-            console.warn('Renderer context not available for framebuffer check.');
-            return;
-          }
-
-          const gl = renderer.getContext();
-          if (!gl) {
-            console.warn('WebGL context not available for framebuffer check.');
-            return;
-          }
-
-          // Bind the default framebuffer and check its status.
-          gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-          const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-
-          if (status !== gl.FRAMEBUFFER_COMPLETE) {
-            console.error('Framebuffer is incomplete. Status:', status.toString(16));
-          } else {
-            console.log('Framebuffer is complete and ready for rendering.');
-          }
-        }, { once: true });
-      }
-    });
-  </script>
 </body>
 </html>
