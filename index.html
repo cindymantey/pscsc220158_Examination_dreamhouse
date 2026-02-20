@@ -7,8 +7,6 @@
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   <!-- Hand tracking and interactions -->
   <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
-  <!-- Teleportation component -->
-  <script src="https://cdn.jsdelivr.net/npm/aframe-teleport-controls@0.3.0/dist/aframe-teleport-controls.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -100,12 +98,9 @@
         wasd-controls="acceleration: 20; adEnabled: true; enabled: true"
         position="0 1.6 15">
         
-        <!-- Right hand controller with teleportation -->
+        <!-- Right hand controller with teleportation (custom) -->
         <a-entity 
           hand-controls="hand: right"
-          teleport-controls="cameraRig: #rig; teleportOrigin: #camera; 
-                           collisionEntities: a-plane; 
-                           button: trigger"
           simple-teleport
           laser-controls="hand: right"
           raycaster="objects: a-plane; 
@@ -173,15 +168,19 @@
   <script>
     // Custom teleportation component (fallback)
     AFRAME.registerComponent('simple-teleport', {
-      init: function() {
+      init: function () {
         this.rig = document.querySelector('#rig');
         this.camera = document.querySelector('#camera');
         this.raycaster = this.el.components.raycaster;
-        
+
         this.el.addEventListener('triggerdown', () => {
-          const intersection = this.raycaster.getIntersection(this.el.object3D);
-          if (intersection && intersection.object.el.tagName === 'A-PLANE') {
-            const newPosition = intersection.point;
+          if (!this.raycaster || !this.raycaster.intersections || !this.raycaster.intersections.length) {
+            return;
+          }
+
+          const intersection = this.raycaster.intersections[0];
+          if (intersection && intersection.object && intersection.object.el && intersection.object.el.tagName === 'A-PLANE') {
+            const newPosition = intersection.point.clone ? intersection.point.clone() : intersection.point;
             newPosition.y = this.camera.getAttribute('position').y;
             this.rig.setAttribute('position', newPosition);
           }
