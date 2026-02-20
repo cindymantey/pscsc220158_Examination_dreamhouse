@@ -152,6 +152,34 @@
           );
         }
       }
+
+      // After the A-Frame scene and renderer are ready, verify framebuffer completeness.
+      const sceneEl = document.querySelector('a-scene');
+      if (sceneEl) {
+        sceneEl.addEventListener('loaded', function () {
+          const renderer = sceneEl.renderer;
+          if (!renderer || !renderer.getContext) {
+            console.warn('Renderer context not available for framebuffer check.');
+            return;
+          }
+
+          const gl = renderer.getContext();
+          if (!gl) {
+            console.warn('WebGL context not available for framebuffer check.');
+            return;
+          }
+
+          // Bind the default framebuffer and check its status.
+          gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+          const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+
+          if (status !== gl.FRAMEBUFFER_COMPLETE) {
+            console.error('Framebuffer is incomplete. Status:', status.toString(16));
+          } else {
+            console.log('Framebuffer is complete and ready for rendering.');
+          }
+        }, { once: true });
+      }
     });
   </script>
 </body>
