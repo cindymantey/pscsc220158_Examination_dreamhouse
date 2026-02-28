@@ -41,7 +41,8 @@
     height="7"
     color="#006994"
     opacity="0.8"
-    transparent="true">
+    transparent="true"
+    id="water">
     <!-- Animate color to simulate shimmer -->
   <a-animation
   attribute="color"
@@ -59,6 +60,15 @@
   to="0.85"
   direction="alternate"
   dur="1500"
+  repeat="indefinite">
+</a-animation>
+<a-animation
+  attribute="position"
+  from="0 0.15 0"
+  to="0 0.18 0"
+  direction="alternate"
+  dur="1800"
+  easing="ease-in-out-sine"
   repeat="indefinite">
 </a-animation>
 
