@@ -42,27 +42,28 @@
     color="#006994"
     opacity="0.8"
     transparent="true">
+    <!-- Animate color to simulate shimmer -->
+  <a-animation
+  attribute="color"
+  from="#00aaff"
+  to="#0077cc"
+  direction="alternate"
+  dur="2000"
+  repeat="indefinite">
+</a-animation>
+
+<!-- Animate opacity to simulate ripple depth -->
+<a-animation
+  attribute="opacity"
+  from="0.6"
+  to="0.85"
+  direction="alternate"
+  dur="1500"
+  repeat="indefinite">
+</a-animation>
+
   </a-plane>
-  <!-- Animate color to simulate shimmer -->
-  <a-animation
-    attribute="color"
-    from="#00aaff"
-    to="#0077cc"
-    direction="alternate"
-    dur="2000"
-    repeat="indefinite">
-  </a-animation>
-
-  <!-- Animate opacity to simulate ripple depth -->
-  <a-animation
-    attribute="opacity"
-    from="0.6"
-    to="0.85"
-    direction="alternate"
-    dur="1500"
-    repeat="indefinite">
-  </a-animation>
-
+  <a-entity water position="7 1 -2"></a-entity>
     
     <!-- Camera with movement controls -->
     <a-entity 
